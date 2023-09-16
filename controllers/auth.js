@@ -48,48 +48,48 @@ const register = async (req, res) => {
   });
 };
 
-const verifyEmail = async (req, res) => {
-  const { verificationToken } = req.params;
-  const user = await User.findOne({ verificationToken }).exec();
+// const verifyEmail = async (req, res) => {
+//   const { verificationToken } = req.params;
+//   const user = await User.findOne({ verificationToken }).exec();
 
-  if (!user) {
-    throw HttpError(404, "User not found");
-  }
+//   if (!user) {
+//     throw HttpError(404, "User not found");
+//   }
 
-  await User.findByIdAndUpdate(user._id, {
-    verify: true,
-    verificationToken: null,
-  }).exec();
+//   await User.findByIdAndUpdate(user._id, {
+//     verify: true,
+//     verificationToken: null,
+//   }).exec();
 
-  res.json({
-    message: "Verification successful",
-  });
-};
+//   res.json({
+//     message: "Verification successful",
+//   });
+// };
 
-const resendVerifyEmail = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email }).exec();
+// const resendVerifyEmail = async (req, res) => {
+//   const { email } = req.body;
+//   const user = await User.findOne({ email }).exec();
   
-  if (!user) {
-    throw HttpError(400, "missing required field email");
-  }
+//   if (!user) {
+//     throw HttpError(400, "missing required field email");
+//   }
   
-  if (user.verify) {
-    throw HttpError(400, "Verification has already been passed");
-  }
+//   if (user.verify) {
+//     throw HttpError(400, "Verification has already been passed");
+//   }
 
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
-  };
+//   const verifyEmail = {
+//     to: email,
+//     subject: "Verify email",
+//     html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
+//   };
 
-  await sendEmail(verifyEmail);
+//   await sendEmail(verifyEmail);
 
-  res.json({
-    message: "Verification email sent",
-  });
-};
+//   res.json({
+//     message: "Verification email sent",
+//   });
+// };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -99,9 +99,9 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  if (!user.verify) {
-    throw HttpError(401, "Email is not verified");
-  }
+  // if (!user.verify) {
+  //   throw HttpError(401, "Email is not verified");
+  // }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
 
@@ -164,8 +164,8 @@ const updateAvatar = async (req, res) => {
 
 module.exports = {
   register: ctrlWrapper(register),
-  verifyEmail: ctrlWrapper(verifyEmail),
-  resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
+  // verifyEmail: ctrlWrapper(verifyEmail),
+  // resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
