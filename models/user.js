@@ -20,7 +20,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      match: passwordRegexp,
+      // match: passwordRegexp,
       required: [true, "Set password for user"],
     },
     goal: {
