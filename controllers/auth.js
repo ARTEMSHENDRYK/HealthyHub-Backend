@@ -14,7 +14,7 @@ const { SECRET_KEY, BASE_URL } = process.env;
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, gender, weight, height, age, activity } = req.body;
   const user = await User.findOne({ email }).exec();
 
   if (user) {
@@ -25,10 +25,15 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email);
   // const verificationToken = uuidv4();
 
+  const bmr = (gender === "Male")
+    ? Math.round(( 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age) ) * activity)
+    : Math.round(( 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age) )* activity);
+  
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    bmr,
     // verificationToken,
   });
 
@@ -43,7 +48,7 @@ const register = async (req, res) => {
   res.status(201).json({
     user: {
       email: newUser.email,
-      subscription: newUser.subscription,
+      // subscription: newUser.subscription,
     },
   });
 };

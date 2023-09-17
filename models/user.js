@@ -50,6 +50,9 @@ const userSchema = new Schema(
       enum: [1.2, 1.375, 1.55, 1.725, 1.9],
       required: [true, "Activity is required"],
     },
+    bmr: {
+      type: Number,
+    },
     token: {
       type: String,
       default: "",
