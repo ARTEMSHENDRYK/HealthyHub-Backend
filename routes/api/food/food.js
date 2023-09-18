@@ -1,15 +1,15 @@
 const express = require("express");
-const ctrl = require("../../controllers/food");
-const { validateBody } = require("../../middlewares");
-const { schemas } = require("../../models/food");
-const { schemaWater } = require("../../models/water");
+const ctrl = require("../../../controllers/food");
+const { validateBody } = require("../../../middlewares");
+const { schemas } = require("../../../models/food");
+const { schemaWater } = require("../../../models/water");
 
 const router = express.Router();
 
 router.post("/food-intake", validateBody(schemas.addSchema), ctrl.addFoodInfo);
 router.put(
   "/food-intake/:id",
-  validateBody(schemas.addSchema),
+  validateBody(schemas.updateFoodSchema),
   ctrl.updateFoodInfo
 );
 

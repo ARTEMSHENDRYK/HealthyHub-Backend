@@ -8,9 +8,9 @@ const waterSchema = new Schema(
       type: Date,
       required: [true, "Date is required"],
     },
-    weight: {
+    water: {
       type: Number,
-      required: [true, "Weight is required"],
+      required: [true, "Water is required"],
     },
     owner: {
       type: Schema.Types.ObjectId,
@@ -27,9 +27,9 @@ const addSchema = Joi.object({
   date: Joi.date()
     .required()
     .messages({ "any.required": "missing required date field" }),
-  weight: Joi.number()
+  water: Joi.number()
     .required()
-    .messages({ "any.required": "missing required weight field" }),
+    .messages({ "any.required": "missing required water field" }),
   owner: Joi.string().required(),
 });
 

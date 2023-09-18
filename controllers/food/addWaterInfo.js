@@ -11,19 +11,19 @@ const addWaterInfo = async (req, res, next) => {
         .json({ message: response.error.details[0].message });
     }
 
-    const { date, weight, owner } = req.body;
+    const { date, water, owner } = req.body;
 
     const newWater = await Water.create({
       ...req.body,
       date,
-      weight,
+      water,
       owner,
     });
 
     res.status(201).json({
       Water: {
         date: newWater.date,
-        weight: newWater.weight,
+        water: newWater.water,
         owner: isValidObjectId,
       },
     });
