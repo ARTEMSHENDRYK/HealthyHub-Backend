@@ -35,7 +35,7 @@ const schemas = {
     addSchema,
 }
 
-const Water = model("weight", waterSchema);
+const Water = model("water", waterSchema);
 
 module.exports = {
   Water,

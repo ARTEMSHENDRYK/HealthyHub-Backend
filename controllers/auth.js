@@ -25,10 +25,15 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email);
   // const verificationToken = uuidv4();
 
-  const bmr = (gender === "Male")
-    ? Math.round(( 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age) ) * activity)
-    : Math.round(( 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age) )* activity);
-  
+  const bmr =
+    gender === "Male"
+      ? Math.round(
+          (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) * activity
+        )
+      : Math.round(
+          (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
+        );
+
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
@@ -74,11 +79,11 @@ const register = async (req, res) => {
 // const resendVerifyEmail = async (req, res) => {
 //   const { email } = req.body;
 //   const user = await User.findOne({ email }).exec();
-  
+
 //   if (!user) {
 //     throw HttpError(400, "missing required field email");
 //   }
-  
+
 //   if (user.verify) {
 //     throw HttpError(400, "Verification has already been passed");
 //   }
@@ -122,18 +127,29 @@ const login = async (req, res) => {
   res.json({
     token,
     user: {
-      email: user.email,
-      subscription: user.subscription,
+      name: user.name,
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
+      bmr: user.bmr,
     },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { name, goal, gender, age, height, weight, activity } = req.user;
 
   res.json({
-    email: email,
-    subscription: subscription,
+    name: name,
+    goal: goal,
+    gender: gender,
+    age: age,
+    height: height,
+    weight: weight,
+    activity: activity,
   });
 };
 

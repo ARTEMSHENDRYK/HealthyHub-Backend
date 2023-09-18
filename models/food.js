@@ -58,7 +58,7 @@ const schemas = {
     addSchema,
 }
 
-const Food = model("weight", foodSchema);
+const Food = model("food", foodSchema);
 
 module.exports = {
   Food,
