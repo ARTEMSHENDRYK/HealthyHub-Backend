@@ -19,26 +19,31 @@ const foodSchema = new Schema(
     carbohydrate: {
       type: Number,
       default: 0,
+      required: [true, "Carbohydrate is required"],
     },
     protein: {
       type: Number,
       default: 0,
+      required: [true, "Protein is required"],
     },
     fat: {
       type: Number,
       default: 0,
+      required: [true, "Fat is required"],
     },
     calories: {
       type: Number,
       default: 0,
+      required: [true, "Calories is required"],
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
-    }
+      ref: "user",
+      required: [true, "Owner is required"],
+    },
   },
   { versionKey: false, timestamps: true }
-)
+);
 
 foodSchema.post("save", handleMongooseError);
 
@@ -52,6 +57,16 @@ const addSchema = Joi.object({
     mealName: Joi.string()
     .required()
     .messages({ "any.required": "missing required mealName field" }),
+  carbohydrate: Joi.string()
+    .required(),
+  protein: Joi.string()
+    .required(),
+  fat: Joi.string()
+    .required(),
+  calories: Joi.string()
+    .required(),
+  owner: Joi.string()
+  .required(),
 });
 
 const schemas = {

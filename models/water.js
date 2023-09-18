@@ -14,24 +14,26 @@ const waterSchema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
-    }
+      ref: "user",
+      required: [true, "Owner is required"],
+    },
   },
   { versionKey: false, timestamps: true }
-)
+);
 
 waterSchema.post("save", handleMongooseError);
 
 const addSchema = Joi.object({
   date: Joi.date()
     .required()
-    .messages({ "any.required": "missing required date field" }), 
+    .messages({ "any.required": "missing required date field" }),
   weight: Joi.number()
     .required()
     .messages({ "any.required": "missing required weight field" }),
+  owner: Joi.string().required(),
 });
 
-const schemas = {
+const schemaWater = {
     addSchema,
 }
 
@@ -39,5 +41,5 @@ const Water = model("water", waterSchema);
 
 module.exports = {
   Water,
-  schemas,
+  schemaWater,
 }

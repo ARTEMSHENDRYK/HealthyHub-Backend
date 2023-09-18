@@ -4,6 +4,7 @@ const cors = require('cors')
 require('dotenv').config();
 
 const authRouter = require('./routes/api/auth')
+const foodRouter = require("./routes/api/food")
 
 const app = express()
 
@@ -14,7 +15,8 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('public'))
 
-app.use('/users', authRouter)
+app.use('/users', authRouter);
+app.use("/api/user", foodRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
