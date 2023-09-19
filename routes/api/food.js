@@ -11,16 +11,15 @@ router.post(
   validateBody(schemas.addSchema),
   ctrl.addFood
 );
+
 router.put(
   "/food-intake/:id",
   authenticate,
   validateBody(schemas.updateFoodSchema),
   ctrl.updateFood
 );
-router.get(
-  "/recommended-food",
-  ctrl.getAll
-);
+
+router.get("/recommended-food", ctrl.getAll);
 
 
 
