@@ -1,4 +1,4 @@
-const { Water, schemaWater } = require("../../models/water");
+const { Water, schemaWater } = require("../models/water");
 const { isValidObjectId } = require("mongoose");
 
 const addWaterInfo = async (req, res, next) => {

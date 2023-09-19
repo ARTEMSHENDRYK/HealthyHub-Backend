@@ -66,21 +66,24 @@ const addSchema = Joi.object({
 });
 
 const updateFoodSchema = Joi.object({
-  date: Joi.date()
-    .required()
-    .messages({ "any.required": "missing required date field" }),
-  mealType: Joi.string()
-    .required()
-    .messages({ "any.required": "missing required mealType field" }),
-  mealName: Joi.string()
-    .required()
-    .messages({ "any.required": "missing required mealName field" }),
-  carbohydrate: Joi.string().required(),
-  protein: Joi.string().required(),
-  fat: Joi.string().required(),
-  calories: Joi.string().required(),
-  owner: Joi.string().required(),
-});
+  date: Joi.date(),
+  mealType: Joi.string(),
+  mealName: Joi.string(),
+  carbohydrate: Joi.number(),
+  protein: Joi.number(),
+  fat: Joi.number(),
+  calories: Joi.number(),
+  owner: Joi.string(),
+}).or(
+  "date",
+  "mealType",
+  "mealName",
+  "carbohydrate",
+  "protein",
+  "fat",
+  "calories",
+  "owner"
+);
 
 const schemas = {
   addSchema,
