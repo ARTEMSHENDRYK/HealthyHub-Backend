@@ -11,11 +11,11 @@ const foodSchema = new Schema(
     mealType: {
       type: String,
       required: [true, "Meal type is required"],
+      enum: ["Breakfast", "Lunch", "Dinner", "Snack"],      
     },
     mealName: {
       type: String,
       required: [true, "Meal name is required"],
-      enum: ["Breakfast", "Lunch", "Dinner", "Snack"],
     },
     carbohydrate: {
       type: Number,

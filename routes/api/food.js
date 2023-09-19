@@ -17,6 +17,11 @@ router.put(
   validateBody(schemas.updateFoodSchema),
   ctrl.updateFood
 );
-router.get("/recommended-food", ctrl.getAll);
+router.get(
+  "/recommended-food",
+  ctrl.getAll
+);
+
+
 
 module.exports = router;
