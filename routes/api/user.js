@@ -11,4 +11,11 @@ router.put(
   ctrl.changeGoal
 );
 
+// router.put(
+//   "/weight",
+//   authenticate,
+//   validateBody(requirementSchema.changeWeightSchema),
+//   ctrl.changeWeight
+// );
+
 module.exports = router;
