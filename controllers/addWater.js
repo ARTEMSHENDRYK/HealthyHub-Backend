@@ -1,7 +1,7 @@
 const { Water, schemaWater } = require("../models/water");
 const { isValidObjectId } = require("mongoose");
 
-const addWaterInfo = async (req, res, next) => {
+const addWater = async (req, res, next) => {
   try {
     const response = schemaWater.addSchema.validate(req.body);
 
@@ -32,4 +32,4 @@ const addWaterInfo = async (req, res, next) => {
   }
 };
 
-module.exports = addWaterInfo;
+module.exports = addWater;

@@ -1,7 +1,7 @@
 const { Food, schemas } = require("../models/food");
 const { isValidObjectId } = require("mongoose");
 
-const addFoodInfo = async (req, res, next) => {
+const addFood = async (req, res, next) => {
   try {
     const response = schemas.addSchema.validate(req.body);
 
@@ -51,4 +51,4 @@ const addFoodInfo = async (req, res, next) => {
   }
 };
 
-module.exports = addFoodInfo;
+module.exports = addFood;

@@ -1,7 +1,7 @@
 const { Food, schemas } = require("../models/food");
 // const { User } = require("../models/user");
 
-const updateFoodInfo = async (req, res, next) => {
+const updateFood = async (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: "missing fields" });
   }
@@ -35,7 +35,7 @@ const updateFoodInfo = async (req, res, next) => {
   }
 };
 
-module.exports = updateFoodInfo;
+module.exports = updateFood;
 
 //     const { foodId } = req.params;
 //     try {
