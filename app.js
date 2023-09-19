@@ -4,7 +4,8 @@ const cors = require('cors')
 require('dotenv').config();
 
 const authRouter = require('./routes/api/auth')
-const foodRouter = require("./routes/api/food/food")
+const foodRouter = require("./routes/api/food")
+// const recomendedFood = require()
 
 const app = express()
 
