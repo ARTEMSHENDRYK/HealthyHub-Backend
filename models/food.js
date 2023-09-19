@@ -74,16 +74,7 @@ const updateFoodSchema = Joi.object({
   fat: Joi.number(),
   calories: Joi.number(),
   owner: Joi.string(),
-}).or(
-  "date",
-  "mealType",
-  "mealName",
-  "carbohydrate",
-  "protein",
-  "fat",
-  "calories",
-  "owner"
-);
+});
 
 const schemas = {
   addSchema,

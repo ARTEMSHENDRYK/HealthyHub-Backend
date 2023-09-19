@@ -1,5 +1,4 @@
 const { Food, schemas } = require("../models/food");
-const { isValidObjectId } = require("mongoose");
 
 const addFood = async (req, res, next) => {
   try {
@@ -43,7 +42,7 @@ const addFood = async (req, res, next) => {
         protein: newFood.protein,
         fat: newFood.fat,
         calories: newFood.calories,
-        owner: isValidObjectId,
+        owner: req.user._id,
       },
     });
   } catch (error) {
