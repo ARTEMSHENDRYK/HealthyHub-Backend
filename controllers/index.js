@@ -2,7 +2,7 @@ const { ctrlWrapper } = require("../helpers");
 const addFood = require("./addFood");
 const updateFood = require("./updateFood");
 const addWater = require("./addWater");
-const getAll = require("./recomendedFood");
+const getAll = require("./recommendedFood");
 
 module.exports = {
   addFood: ctrlWrapper(addFood),
