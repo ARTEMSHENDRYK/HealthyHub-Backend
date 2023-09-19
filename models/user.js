@@ -20,7 +20,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      match: passwordRegexp,
+      // match: passwordRegexp,
       required: [true, "Set password for user"],
     },
     goal: {
@@ -49,6 +49,9 @@ const userSchema = new Schema(
       type: Number,
       enum: [1.2, 1.375, 1.55, 1.725, 1.9],
       required: [true, "Activity is required"],
+    },
+    bmr: {
+      type: Number,
     },
     token: {
       type: String,

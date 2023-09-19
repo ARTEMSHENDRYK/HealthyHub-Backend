@@ -14,7 +14,7 @@ const { SECRET_KEY, BASE_URL } = process.env;
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, gender, weight, height, age, activity } = req.body;
   const user = await User.findOne({ email }).exec();
 
   if (user) {
@@ -23,28 +23,35 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  const verificationToken = uuidv4();
+  // const verificationToken = uuidv4();
+
+  const bmr =
+    gender === "Male"
+      ? Math.round(
+          (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) * activity
+        )
+      : Math.round(
+          (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
+        );
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    verificationToken,
+    bmr,
+    // verificationToken,
   });
 
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Verify your email</a>`,
-  };
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: "Verify email",
+  //   html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Verify your email</a>`,
+  // };
 
-  await sendEmail(verifyEmail);
+  // await sendEmail(verifyEmail);
 
   res.status(201).json({
-    user: {
-      email: newUser.email,
-      subscription: newUser.subscription,
-    },
+    email: newUser.email,
   });
 };
 
@@ -69,11 +76,11 @@ const register = async (req, res) => {
 // const resendVerifyEmail = async (req, res) => {
 //   const { email } = req.body;
 //   const user = await User.findOne({ email }).exec();
-  
+
 //   if (!user) {
 //     throw HttpError(400, "missing required field email");
 //   }
-  
+
 //   if (user.verify) {
 //     throw HttpError(400, "Verification has already been passed");
 //   }
@@ -117,18 +124,29 @@ const login = async (req, res) => {
   res.json({
     token,
     user: {
-      email: user.email,
-      subscription: user.subscription,
+      name: user.name,
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
+      bmr: user.bmr,
     },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { name, goal, gender, age, height, weight, activity } = req.user;
 
   res.json({
-    email: email,
-    subscription: subscription,
+    name: name,
+    goal: goal,
+    gender: gender,
+    age: age,
+    height: height,
+    weight: weight,
+    activity: activity,
   });
 };
 
