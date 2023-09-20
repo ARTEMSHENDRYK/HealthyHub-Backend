@@ -19,7 +19,7 @@ app.use(express.static("public"));
 
 app.use("/users", authRouter);
 app.use("/api/user", foodRouter);
-app.use("api/user", waterRouter);
+app.use("/api/user", waterRouter);
 app.use("/api/user", userRouter);
 
 app.use((req, res) => {
