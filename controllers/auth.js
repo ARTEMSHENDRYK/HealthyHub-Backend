@@ -180,6 +180,10 @@ const updateAvatar = async (req, res) => {
   });
 };
 
+const updateUser = async (req, res) => {
+
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   // verifyEmail: ctrlWrapper(verifyEmail),
@@ -188,4 +192,5 @@ module.exports = {
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
+  updateUser: ctrlWrapper(updateUser),
 };
