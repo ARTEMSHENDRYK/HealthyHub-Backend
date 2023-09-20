@@ -46,7 +46,16 @@ const changeWeight = async (req, res) => {
   res.status(200).json(updatedUserAndDay);
 };
 
+const statistics = async (req, res) => {
+  // TODO calculate calories, water based on foodIntake
+  const caloriesIntake = 2100;
+  const waterIntake = 1200;
+
+  res.json({ waterIntake, caloriesIntake, weight: req.user.weight });
+};
+
 module.exports = {
   changeGoal: ctrlWrapper(changeGoal),
   changeWeight: ctrlWrapper(changeWeight),
+  statistics: ctrlWrapper(statistics),
 };

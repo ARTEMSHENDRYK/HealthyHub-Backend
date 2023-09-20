@@ -19,4 +19,6 @@ router.put(
   ctrl.changeWeight
 );
 
+router.get("/statistics", authenticate, ctrl.statistics);
+
 module.exports = router;
