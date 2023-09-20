@@ -19,8 +19,7 @@ router.put(
   ctrl.updateFood
 );
 
-router.get("/recommended-food", ctrl.getAll);
-
-
+router.get("/recommended-food", 
+authenticate, ctrl.getAll);
 
 module.exports = router;

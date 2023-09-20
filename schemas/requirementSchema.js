@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const changeGoalSchema = Joi.object({
-  goal: Joi.string().valid("lose fat", "maintain", "gain muscle").required(),
+  goal: Joi.string().valid("Lose fat", "Maintain", "Gain muscle").required(),
 });
 
 const changeWeightSchema = Joi.object({

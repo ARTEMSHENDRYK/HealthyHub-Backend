@@ -181,7 +181,15 @@ const updateAvatar = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const { _id } = req.user;
 
+  const user = await User.findByIdAndUpdate(_id, req.body, { new: true }).exec();
+
+  if (!user) {
+    throw HttpError(404, "Not found");
+  }
+
+  res.status(200).json(req.body);
 };
 
 module.exports = {

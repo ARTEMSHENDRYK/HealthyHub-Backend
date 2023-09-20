@@ -25,7 +25,7 @@ const userSchema = new Schema(
     },
     goal: {
       type: String,
-      enum: ["Lose Fat", "Maintain", "Gain Muscle"],
+      enum: ["Lose fat", "Maintain", "Gain muscle"],
       required: [true, "Goal is required"],
     },
     gender: {
@@ -121,10 +121,20 @@ const loginSchema = Joi.object({
     .messages({ "any.required": "missing required password field" }),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string(),
+  gender: Joi.string(),
+  age: Joi.number(),
+  height: Joi.number(),
+  weight: Joi.number(),
+  activity: Joi.number(),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
+  updateSchema,
 };
 
 const User = model("user", userSchema);
