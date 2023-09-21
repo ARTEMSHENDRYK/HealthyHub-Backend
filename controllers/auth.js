@@ -132,21 +132,22 @@ const login = async (req, res) => {
       weight: user.weight,
       activity: user.activity,
       bmr: user.bmr,
+      avatarURL: user.avatarURL,
     },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { name, goal, gender, age, height, weight, activity } = req.user;
+  const { name, gender, age, height, weight, activity, avatarURL } = req.user;
 
   res.json({
     name: name,
-    goal: goal,
     gender: gender,
     age: age,
     height: height,
     weight: weight,
     activity: activity,
+    avatarURL: avatarURL,
   });
 };
 
@@ -178,7 +179,7 @@ const updateAvatar = async (req, res) => {
   res.json({
     avatarURL,
   });
-};
+ };
 
 const updateUser = async (req, res) => {
   const { _id } = req.user;
@@ -189,7 +190,28 @@ const updateUser = async (req, res) => {
     throw HttpError(404, "Not found");
   }
 
-  res.status(200).json(req.body);
+  const { gender, weight, height, age, activity } = user;
+
+  const bmr =
+    gender === "Male"
+      ? Math.round(
+        (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) * activity
+      )
+      : Math.round(
+        (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
+      );
+  
+  await User.findByIdAndUpdate(_id, { bmr }, { new: true }).exec();
+
+  res.status(200).json({
+    name: user.name,
+    gender: user.gender,
+    age: user.age,
+    height: user.height,
+    weight: user.weight,
+    activity: user.activity,
+    bmr: bmr,
+  });
 };
 
 module.exports = {
