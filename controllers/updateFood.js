@@ -1,7 +1,6 @@
 const { Food, schemas } = require("../models/food");
-// const { User } = require("../models/user");
 
-const updateFoodInfo = async (req, res, next) => {
+const updateFood = async (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: "missing fields" });
   }
@@ -11,22 +10,14 @@ const updateFoodInfo = async (req, res, next) => {
     return res.status(400).json({ message: errorMessage });
   }
 
-  const { _id } = req.params;
-
-  const food = {
-    mealType: req.body.mealType,
-    mealName: req.body.mealName,
-    carbohydrate: req.body.carbohydrate,
-    protein: req.body.protein,
-    fat: req.body.fat,
-    calories: req.body.calories,
-  };
+  const { id: foodId } = req.params;
+  const food = req.body;
 
   try {
-    const result = await Food.findByIdAndUpdate(_id, food, {
+    const result = await Food.findByIdAndUpdate(foodId, food, {
       new: true,
     }).exec();
-    if (result === null) {
+    if (!result) {
       return res.status(404).json({ message: "Food not found" });
     }
     return res.json(result);
@@ -35,7 +26,7 @@ const updateFoodInfo = async (req, res, next) => {
   }
 };
 
-module.exports = updateFoodInfo;
+module.exports = updateFood;
 
 //     const { foodId } = req.params;
 //     try {
