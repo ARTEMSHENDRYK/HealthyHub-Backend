@@ -15,7 +15,7 @@ const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
   const { email, password, gender, weight, height, age, activity } = req.body;
-  const user = await User.findOne({ email }).exec();
+  const user = await User.findOne({ email });
 
   if (user) {
     throw HttpError(409, "Email in use");
