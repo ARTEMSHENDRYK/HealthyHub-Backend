@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../helpers");
+const mealType = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
 const foodSchema = new Schema(
   {
@@ -11,7 +12,7 @@ const foodSchema = new Schema(
     mealType: {
       type: String,
       required: [true, "Meal type is required"],
-      enum: ["Breakfast", "Lunch", "Dinner", "Snack"],      
+      enum: mealType,      
     },
     mealName: {
       type: String,
@@ -53,6 +54,7 @@ const addSchema = Joi.object({
   //   .messages({ "any.required": "missing required date field" }),
   mealType: Joi.string()
     .required()
+    .valid(...mealType)
     .messages({ "any.required": "missing required mealType field" }),
   mealName: Joi.string()
     .required()
@@ -77,6 +79,7 @@ const updateSchema = Joi.object({
   //   .messages({ "any.required": "missing required date field" }),
   mealType: Joi.string()
     .required()
+    .valid(...mealType)
     .messages({ "any.required": "missing required mealType field" }),
   mealName: Joi.string()
     .required()
