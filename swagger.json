@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.2",
+    "title": "HealthyHub",
+    "description": "HealthyHub Swagger Documentation",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://healthyhub-z4y1.onrender.com" }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User endpoints"
+    }
+  ],
+  "paths": {
+    "/api/user/goal": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Set goal for user",
+        "operationId": "user`s goal",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Goal object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Goal is successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body"
+          }
+        }
+      }
+    },
+
+    "components": {
+      "schemas": {
+        "GoalRequest": {
+          "type": "object",
+          "required": ["goal"],
+          "properties": {
+            "goal": {
+              "type": "string",
+              "description": "User's fitness goal",
+              "enum": ["lose fat", "maintain", "gain muscle"]
+            }
+          }
+        },
+        "GoalResponse": {
+          "type": "object",
+          "properties": {
+            "goal": {
+              "type": "string",
+              "description": "User's fitness goal"
+            }
+          },
+          "example": {
+            "goal": "maintain"
+          }
+        },
+
+        "securitySchemes": {
+          "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        }
+      }
+    }
+  }
+}
