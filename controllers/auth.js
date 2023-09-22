@@ -182,9 +182,9 @@ const updateAvatar = async (req, res) => {
  };
 
 const updateUser = async (req, res) => {
-  const { _id } = req.user;
+  const { _id: owner } = req.user;
 
-  const user = await User.findByIdAndUpdate(_id, req.body, { new: true }).exec();
+  const user = await User.findByIdAndUpdate(owner, req.body, { new: true }).exec();
 
   if (!user) {
     throw HttpError(404, "Not found");
@@ -201,7 +201,7 @@ const updateUser = async (req, res) => {
         (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
       );
   
-  await User.findByIdAndUpdate(_id, { bmr }, { new: true }).exec();
+  await User.findByIdAndUpdate(owner, { bmr }, { new: true }).exec();
 
   res.status(200).json({
     name: user.name,
