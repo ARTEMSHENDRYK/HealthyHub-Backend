@@ -4,10 +4,10 @@ const { handleMongooseError } = require("../helpers");
 
 const weightSchema = new Schema(
   {
-    date: {
-      type: Date,
-      required: [true, "Date is required"],
-    },
+    // date: {
+    //   type: Date,
+    //   required: [true, "Date is required"],
+    // },
     weight: {
       type: Number,
       required: [true, "Weight is required"],
@@ -23,9 +23,9 @@ const weightSchema = new Schema(
 weightSchema.post("save", handleMongooseError);
 
 const addSchema = Joi.object({
-  date: Joi.date()
-    .required()
-    .messages({ "any.required": "missing required date field" }), 
+  // date: Joi.date()
+  //   .required()
+  //   .messages({ "any.required": "missing required date field" }), 
   weight: Joi.number()
     .required()
     .messages({ "any.required": "missing required weight field" }),

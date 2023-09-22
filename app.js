@@ -3,9 +3,10 @@ const logger = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
 
-const authRouter = require('./routes/api/auth');
+const authRouter = require("./routes/api/auth");
 const foodRouter = require("./routes/api/food");
 const waterRouter = require("./routes/api/water");
+const weightRouter = require("./routes/api/weight");
 const userRouter = require("./routes/api/user");
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.static("public"));
 app.use("/users", authRouter);
 app.use("/api/user", foodRouter);
 app.use("/api/user", waterRouter);
+app.use("/api/user", weightRouter);
 app.use("/api/user", userRouter);
 
 app.use((req, res) => {

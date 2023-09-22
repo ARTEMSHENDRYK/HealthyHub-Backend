@@ -20,6 +20,6 @@ router.put(
 );
 
 router.get("/recommended-food", 
-authenticate, ctrl.getAll);
+authenticate, ctrl.getRecommendedFood);
 
 module.exports = router;

@@ -31,7 +31,7 @@ const addSchema = Joi.object({
     .messages({ "any.required": "missing required water field" }),
 });
 
-const schemaWater = {
+const schemas = {
     addSchema,
 }
 
@@ -39,5 +39,5 @@ const Water = model("water", waterSchema);
 
 module.exports = {
   Water,
-  schemaWater,
+  schemas,
 }
