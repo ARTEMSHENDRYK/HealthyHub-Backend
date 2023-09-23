@@ -214,6 +214,52 @@ const updateUser = async (req, res) => {
   });
 };
 
+const updateGoal = async (req, res) => {
+  const { _id: owner, bmr } = req.user;
+  const { goal } = req.body;
+
+  const user = await User.findByIdAndUpdate(owner, { goal }, { new: true }).exec();
+
+    if (!user) {
+    throw HttpError(404, "Not found");
+  }
+
+  let proteinPercentage, fatPercentage;
+
+  switch (goal) {
+    case "Lose fat":
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+      break;
+    case "Gain muscle":
+      proteinPercentage = 0.30;
+      fatPercentage = 0.20;
+      break;
+    case "Maintain":
+      proteinPercentage = 0.20;
+      fatPercentage = 0.25;
+      break;
+    default:
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+  }
+
+  const carbohydratePercentage = 1 - (proteinPercentage + fatPercentage);
+
+  const protein = Math.round((proteinPercentage * bmr) / 4);
+  const fat = Math.round((fatPercentage * bmr) / 9);
+  const carbohydrate = Math.round((carbohydratePercentage * bmr) / 4);
+
+  await User.findByIdAndUpdate(owner, { fat, protein, carbohydrate }, { new: true }).exec();
+
+  res.json({
+    goal: user.goal,
+    fat: fat,
+    protein: protein,
+    carbohydrate: carbohydrate,
+  });
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   // verifyEmail: ctrlWrapper(verifyEmail),
@@ -223,4 +269,5 @@ module.exports = {
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
   updateUser: ctrlWrapper(updateUser),
+  updateGoal: ctrlWrapper(updateGoal),
 };

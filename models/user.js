@@ -56,6 +56,15 @@ const userSchema = new Schema(
     bmr: {
       type: Number,
     },
+    fat: {
+      type: Number,
+    },
+    protein: {
+      type: Number,
+    },
+    carbohydrate: {
+      type: Number,
+    },
     token: {
       type: String,
       default: "",
@@ -136,11 +145,16 @@ const updateSchema = Joi.object({
   activity: Joi.number().valid(...activity),
 });
 
+const updateGoalSchema = Joi.object({
+  goal: Joi.string().required().valid(...goal).messages({ "any.required": "missing required goal field" }),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
   updateSchema,
+  updateGoalSchema,
 };
 
 const User = model("user", userSchema);
