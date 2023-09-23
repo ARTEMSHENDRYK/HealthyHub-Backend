@@ -15,12 +15,11 @@ router.post(
 router.put(
   "/food-intake/:id",
   authenticate,
-  validateBody(schemas.updateFoodSchema),
+  validateBody(schemas.updateSchema),
   ctrl.updateFood
 );
 
-router.get("/recommended-food", ctrl.getAll);
-
-
+router.get("/recommended-food", 
+authenticate, ctrl.getRecommendedFood);
 
 module.exports = router;

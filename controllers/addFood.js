@@ -1,53 +1,19 @@
-const { Food, schemas } = require("../models/food");
+const { Food } = require("../models/food");
 
 const addFood = async (req, res, next) => {
-  try {
-    const response = schemas.addSchema.validate(req.body);
+  const { _id: owner } = req.user;
 
-    if (response.error) {
-      return res
-        .status(400)
-        .json({ message: response.error.details[0].message });
-    }
+  const newFood = await Food.create({ ...req.body, owner });
 
-    const {
-      date,
-      mealType,
-      mealName,
-      carbohydrate,
-      protein,
-      fat,
-      calories,
-      owner,
-    } = req.body;
-
-    const newFood = await Food.create({
-      ...req.body,
-      date,
-      mealType,
-      mealName,
-      carbohydrate,
-      protein,
-      fat,
-      calories,
-      owner,
-    });
-
-    res.status(201).json({
-      food: {
-        date: newFood.date,
-        mealType: newFood.mealType,
-        mealName: newFood.mealName,
-        carbohydrate: newFood.carbohydrate,
-        protein: newFood.protein,
-        fat: newFood.fat,
-        calories: newFood.calories,
-        owner: req.user._id,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.status(201).json({
+    createdAt: newFood.createdAt,
+    mealType: newFood.mealType,
+    mealName: newFood.mealName,
+    carbohydrate: newFood.carbohydrate,
+    protein: newFood.protein,
+    fat: newFood.fat,
+    calories: newFood.calories,
+  });
 };
 
 module.exports = addFood;

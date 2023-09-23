@@ -1,17 +1,18 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../helpers");
+const mealType = ["Breakfast", "Lunch", "Dinner", "Snack"];
 
 const foodSchema = new Schema(
   {
-    date: {
-      type: Date,
-      required: [true, "Date is required"],
-    },
+    // date: {
+    //   type: Date,
+    //   required: [true, "Date is required"],
+    // },
     mealType: {
       type: String,
       required: [true, "Meal type is required"],
-      enum: ["Breakfast", "Lunch", "Dinner", "Snack"],      
+      enum: mealType,      
     },
     mealName: {
       type: String,
@@ -40,7 +41,6 @@ const foodSchema = new Schema(
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
-      required: [true, "Owner is required"],
     },
   },
   { versionKey: false, timestamps: true }
@@ -49,36 +49,58 @@ const foodSchema = new Schema(
 foodSchema.post("save", handleMongooseError);
 
 const addSchema = Joi.object({
-  date: Joi.date()
-    .required()
-    .messages({ "any.required": "missing required date field" }),
+  // date: Joi.date()
+  //   .required()
+  //   .messages({ "any.required": "missing required date field" }),
   mealType: Joi.string()
     .required()
+    .valid(...mealType)
     .messages({ "any.required": "missing required mealType field" }),
   mealName: Joi.string()
     .required()
     .messages({ "any.required": "missing required mealName field" }),
-  carbohydrate: Joi.string().required(),
-  protein: Joi.string().required(),
-  fat: Joi.string().required(),
-  calories: Joi.string().required(),
-  owner: Joi.string().required(),
+  carbohydrate: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required carbohydrate field" }),
+  protein: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required protein field" }),
+  fat: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required fat field" }),
+  calories: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required calories field" }),
 });
 
-const updateFoodSchema = Joi.object({
-  date: Joi.date(),
-  mealType: Joi.string(),
-  mealName: Joi.string(),
-  carbohydrate: Joi.number(),
-  protein: Joi.number(),
-  fat: Joi.number(),
-  calories: Joi.number(),
-  owner: Joi.string(),
+const updateSchema = Joi.object({
+  // date: Joi.date()
+  //   .required()
+  //   .messages({ "any.required": "missing required date field" }),
+  mealType: Joi.string()
+    .required()
+    .valid(...mealType)
+    .messages({ "any.required": "missing required mealType field" }),
+  mealName: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required mealName field" }),
+  carbohydrate: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required carbohydrate field" }),
+  protein: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required protein field" }),
+  fat: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required fat field" }),
+  calories: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required calories field" }),
 });
 
 const schemas = {
   addSchema,
-  updateFoodSchema,
+  updateSchema,
 };
 
 const Food = model("food", foodSchema);

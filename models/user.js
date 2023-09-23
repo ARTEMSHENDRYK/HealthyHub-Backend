@@ -4,6 +4,9 @@ const { handleMongooseError } = require("../helpers");
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const passwordRegexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,16}$/;
+const gender = ["Male", "Female"];
+const goal = ["Lose fat", "Maintain", "Gain muscle"];
+const activity = [1.2, 1.375, 1.55, 1.725, 1.9];
 
 const userSchema = new Schema(
   {
@@ -25,12 +28,12 @@ const userSchema = new Schema(
     },
     goal: {
       type: String,
-      enum: ["Lose Fat", "Maintain", "Gain Muscle"],
+      enum: goal,
       required: [true, "Goal is required"],
     },
     gender: {
       type: String,
-      enum: ["Male", "Female"],
+      enum: gender,
       required: [true, "Gender is required"],
     },
     age: {
@@ -47,10 +50,19 @@ const userSchema = new Schema(
     },
     activity: {
       type: Number,
-      enum: [1.2, 1.375, 1.55, 1.725, 1.9],
+      enum: activity,
       required: [true, "Activity is required"],
     },
     bmr: {
+      type: Number,
+    },
+    fat: {
+      type: Number,
+    },
+    protein: {
+      type: Number,
+    },
+    carbohydrate: {
       type: Number,
     },
     token: {
@@ -86,9 +98,11 @@ const registerSchema = Joi.object({
     .messages({ "any.required": "missing required password field" }),
   goal: Joi.string()
     .required()
+    .valid(...goal)
     .messages({ "any.required": "missing required goal field" }),
   gender: Joi.string()
     .required()
+    .valid(...gender)
     .messages({ "any.required": "missing required gender field" }),
   age: Joi.number()
     .required()
@@ -101,6 +115,7 @@ const registerSchema = Joi.object({
     .messages({ "any.required": "missing required weight field" }),
   activity: Joi.number()
     .required()
+    .valid(...activity)
     .messages({ "any.required": "missing required activity field" }),
 });
 
@@ -121,10 +136,25 @@ const loginSchema = Joi.object({
     .messages({ "any.required": "missing required password field" }),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string(),
+  gender: Joi.string().valid(...gender),
+  age: Joi.number(),
+  height: Joi.number(),
+  weight: Joi.number(),
+  activity: Joi.number().valid(...activity),
+});
+
+const updateGoalSchema = Joi.object({
+  goal: Joi.string().required().valid(...goal).messages({ "any.required": "missing required goal field" }),
+});
+
 const schemas = {
   registerSchema,
   loginSchema,
   emailSchema,
+  updateSchema,
+  updateGoalSchema,
 };
 
 const User = model("user", userSchema);

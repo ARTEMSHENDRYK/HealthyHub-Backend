@@ -1,34 +1,41 @@
-const { Water, schemaWater } = require("../models/water");
-const { isValidObjectId } = require("mongoose");
+const { Water } = require("../models/water");
 
 const addWater = async (req, res, next) => {
-  try {
-    const response = schemaWater.addSchema.validate(req.body);
+  const { _id: owner } = req.user;
+  const { water } = req.body;
 
-    if (response.error) {
-      return res
-        .status(400)
-        .json({ message: response.error.details[0].message });
-    }
+  const currentDate = Date.now();
+  const beginDate = new Date(currentDate);
+  const endDate = new Date(currentDate);
 
-    const { date, water, owner } = req.body;
+  beginDate.setHours(0, 0, 0, 0);
+  endDate.setHours(23, 59, 59, 999);
 
-    const newWater = await Water.create({
-      ...req.body,
-      date,
-      water,
-      owner,
+  const existWater = await Water.findOne({
+    owner,
+    createdAt: { $gte: beginDate, $lte: endDate },
+  }).exec();
+
+  if (existWater) {
+    const { _id: id, water: addWater } = existWater;
+
+    const updateWater = await Water.findByIdAndUpdate(
+      id,
+      { water: water + addWater },
+      { new: true }
+    ).exec();
+
+    res.status(200).json({
+      createdAt: updateWater.updatedAt,
+      water: updateWater.water,
     });
+  } else {
+    const newWater = await Water.create({ water, owner });
 
     res.status(201).json({
-      Water: {
-        date: newWater.date,
-        water: newWater.water,
-        owner: isValidObjectId,
-      },
+      createdAt: newWater.createdAt,
+      water: newWater.water,
     });
-  } catch (error) {
-    next(error);
   }
 };
 

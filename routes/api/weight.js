@@ -1,21 +1,15 @@
 const express = require("express");
 const ctrl = require("../../controllers");
 const { validateBody, authenticate } = require("../../middlewares");
-const { schemas } = require("../../models/water");
+const { schemas } = require("../../models/weight");
 
 const router = express.Router();
 
 router.post(
-  "/water-intake",
+  "/weight",
   authenticate,
   validateBody(schemas.addSchema),
-  ctrl.addWater
-);
-
-router.get(
-  "/statistics",
-  authenticate,
-  ctrl.getStatistics
+  ctrl.addWeight
 );
 
 module.exports = router;
