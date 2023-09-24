@@ -23,4 +23,6 @@ router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvata
 
 router.patch("/goal", authenticate, validateBody(schemas.updateGoalSchema), ctrl.updateGoal);
 
+router.patch("/forgotpassword", validateBody(schemas.forgotPasswordSchema), ctrl.forgotPassword);
+
 module.exports = router;

@@ -4,18 +4,17 @@ const gravatar = require("gravatar");
 const path = require("path");
 const fs = require("fs/promises");
 const Jimp = require("jimp");
-const { v4: uuidv4 } = require("uuid");
 
 const { User } = require("../models/user");
 const { HttpError, ctrlWrapper, sendEmail } = require("../helpers");
 
-const { SECRET_KEY, BASE_URL } = process.env;
+const { SECRET_KEY } = process.env;
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
-  const { email, password, gender, weight, height, age, activity } = req.body;
-  const user = await User.findOne({ email });
+  const { email, password, goal, gender, weight, height, age, activity } = req.body;
+  const user = await User.findOne({ email }).exec();
 
   if (user) {
     throw HttpError(409, "Email in use");
@@ -23,7 +22,6 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  // const verificationToken = uuidv4();
 
   const bmr =
     gender === "Male"
@@ -32,71 +30,49 @@ const register = async (req, res) => {
         )
       : Math.round(
           (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
-        );
+      );
+  
+  let proteinPercentage, fatPercentage;
+
+  switch (goal) {
+    case "Lose fat":
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+      break;
+    case "Gain muscle":
+      proteinPercentage = 0.30;
+      fatPercentage = 0.20;
+      break;
+    case "Maintain":
+      proteinPercentage = 0.20;
+      fatPercentage = 0.25;
+      break;
+    default:
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+  }
+
+  const carbohydratePercentage = 1 - (proteinPercentage + fatPercentage);
+
+  const protein = Math.round((proteinPercentage * bmr) / 4);
+  const fat = Math.round((fatPercentage * bmr) / 9);
+  const carbohydrate = Math.round((carbohydratePercentage * bmr) / 4);  
+
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
     bmr,
-    // verificationToken,
+    fat,
+    protein,
+    carbohydrate,
   });
-
-  // const verifyEmail = {
-  //   to: email,
-  //   subject: "Verify email",
-  //   html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Verify your email</a>`,
-  // };
-
-  // await sendEmail(verifyEmail);
 
   res.status(201).json({
     email: newUser.email,
   });
 };
-
-// const verifyEmail = async (req, res) => {
-//   const { verificationToken } = req.params;
-//   const user = await User.findOne({ verificationToken }).exec();
-
-//   if (!user) {
-//     throw HttpError(404, "User not found");
-//   }
-
-//   await User.findByIdAndUpdate(user._id, {
-//     verify: true,
-//     verificationToken: null,
-//   }).exec();
-
-//   res.json({
-//     message: "Verification successful",
-//   });
-// };
-
-// const resendVerifyEmail = async (req, res) => {
-//   const { email } = req.body;
-//   const user = await User.findOne({ email }).exec();
-
-//   if (!user) {
-//     throw HttpError(400, "missing required field email");
-//   }
-
-//   if (user.verify) {
-//     throw HttpError(400, "Verification has already been passed");
-//   }
-
-//   const verifyEmail = {
-//     to: email,
-//     subject: "Verify email",
-//     html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
-//   };
-
-//   await sendEmail(verifyEmail);
-
-//   res.json({
-//     message: "Verification email sent",
-//   });
-// };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -105,10 +81,6 @@ const login = async (req, res) => {
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
-
-  // if (!user.verify) {
-  //   throw HttpError(401, "Email is not verified");
-  // }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
 
@@ -260,14 +232,43 @@ const updateGoal = async (req, res) => {
   });
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  
+  const user = await User.findOne({ email }).exec();
+
+  if (!user) {
+    throw HttpError(400, "Wrong email");
+  }
+
+  const { _id: owner } = user;
+
+  const password = Math.random().toString(36).substring(2,15) + "Sh7";
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  
+  await User.findByIdAndUpdate(owner, { password: hashPassword }, { new: true }).exec();
+
+  const newPassword = {
+    to: email,
+    subject: "New password",
+    text: `Your new password for Healty Hub: ${password}`,
+  };
+
+  await sendEmail(newPassword);
+
+  res.json({
+    message: "New password sent to your email",
+  });
+}
+
 module.exports = {
   register: ctrlWrapper(register),
-  // verifyEmail: ctrlWrapper(verifyEmail),
-  // resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateAvatar: ctrlWrapper(updateAvatar),
   updateUser: ctrlWrapper(updateUser),
   updateGoal: ctrlWrapper(updateGoal),
+  forgotPassword: ctrlWrapper(forgotPassword),
 };

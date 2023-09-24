@@ -119,7 +119,7 @@ const registerSchema = Joi.object({
     .messages({ "any.required": "missing required activity field" }),
 });
 
-const emailSchema = Joi.object({
+const forgotPasswordSchema = Joi.object({
   email: Joi.string()
     .pattern(emailRegexp)
     .required()
@@ -152,7 +152,7 @@ const updateGoalSchema = Joi.object({
 const schemas = {
   registerSchema,
   loginSchema,
-  emailSchema,
+  forgotPasswordSchema,
   updateSchema,
   updateGoalSchema,
 };
