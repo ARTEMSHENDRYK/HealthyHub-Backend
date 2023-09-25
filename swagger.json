@@ -1,0 +1,1005 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "2.0.2",
+    "title": "HealthyHub",
+    "description": "HealthyHub Swagger Documentation",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://healthyhub-z4y1.onrender.com" }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Auth endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Food",
+      "description": "Foods endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Water endpoints"
+    },
+    {
+      "name": "RecomendedFood",
+      "description": "Recommended food endpoints"
+    }
+  ],
+  "paths": {
+    "/api/users/register/{name}/{email}/{password}": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "User's name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "User's email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "User's password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Registration object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "johndoe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password",
+                    "example": "password123"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "John Doe"
+                  },
+                  "goal": {
+                    "type": "string",
+                    "description": "User's goal",
+                    "example": "Lose Fat",
+                    "enum": ["Lose Fat", "Gain Muscle", "Maintain Weight"]
+                  },
+                  "age": {
+                    "type": "number",
+                    "description": "User's age"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "description": "User's weight"
+                  },
+                  "height": {
+                    "type": "number",
+                    "description": "User's height"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": ["male", "female"]
+                  },
+                  "activity": {
+                    "type": "number",
+                    "enum": [1.2, 1.375, 1.55, 1.725, 1.9]
+                  }
+                },
+                "required": ["email", "password", "name", "goal", "age"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful registration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "code": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "Authentication token for the registered user",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "format": "email",
+                          "example": "johndoe@example.com"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          },
+          "401": {
+            "description": "Unauthorized (invalid credentials)"
+          }
+        }
+      }
+    },
+    "/users/login/{email}/{password}": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "User's email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "User's password",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          },
+          "401": {
+            "description": "Unauthorized (invalid credentials)"
+          }
+        }
+      }
+    },
+    "/verify": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Resend verification email",
+        "requestBody": {
+          "description": "Email object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification email resent successfully"
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          },
+          "401": {
+            "description": "Unauthorized (invalid token)"
+          }
+        }
+      }
+    },
+    "/verify/{token}": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Verify email with token",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verification successful"
+          },
+          "400": {
+            "description": "Bad request (invalid token)"
+          },
+          "401": {
+            "description": "Unauthorized (invalid token)"
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "security": [{ "Bearer": [] }],
+
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed"
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "update user field",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/forgotpassword": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "update user password",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Update's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/forgotpasswordRequest"
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/forgotpasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Email is not found",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/goal": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update user's goal",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Goal object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/user/food-intake": {
+      "post": {
+        "tags": ["Food"],
+        "summary": "Add info about food",
+        "parameters": [],
+        "requestBody": {
+          "description": "Food's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddFoodRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoodResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          }
+        }
+      }
+    },
+    "/api/user/food-intake/{id}": {
+      "put": {
+        "tags": ["Food"],
+        "summary": "Update info about food",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Food ID"
+          }
+        ],
+        "requestBody": {
+          "description": "Updated Food's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddFoodRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FoodResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          }
+        }
+      }
+    },
+    "/api/user/water-intake": {
+      "post": {
+        "tags": ["Water"],
+        "summary": "Add info about water",
+        "parameters": [],
+        "requestBody": {
+          "description": "Water's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddWaterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddWaterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          }
+        }
+      }
+    },
+
+    "/api/recommended-food": {
+      "get": {
+        "tags": ["RecomendedFood"],
+        "summary": "Get recommended food list",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecomendedFood"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)"
+          }
+        }
+      }
+    },
+
+    "/api/user/weight": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Add user's weight",
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Weight object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeightRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": " Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeightResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "Password123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Authentication token",
+            "example": "hgus23sdmpsa12dSh7"
+          }
+        }
+      },
+      "EmailRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+
+      "CurrentResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "gender": {
+            "type": "string",
+            "description": "User's gender"
+          },
+          "age": {
+            "type": "number",
+            "description": "User's age"
+          },
+          "height": {
+            "type": "number",
+            "description": "User's height"
+          },
+          "weight": {
+            "type": "number",
+            "description": "User's weight"
+          },
+          "activity": {
+            "type": "number",
+            "description": "User's activity"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar"
+          }
+        },
+        "examples": [
+          {
+            "name": "Group01",
+            "gender": "Male",
+            "age": 44,
+            "height": 175,
+            "weight": 70,
+            "activity": 1.9,
+            "avatarURL": "//www.gravatar.com/avatar/ef452590c8ea4b42a0b5c9abdbebab24"
+          }
+        ]
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          }
+        }
+      },
+      "UpdateResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "gender": {
+            "type": "string",
+            "description": "User's gender"
+          },
+          "age": {
+            "type": "number",
+            "description": "User's age"
+          },
+          "height": {
+            "type": "number",
+            "description": "User's height"
+          },
+          "weight": {
+            "type": "number",
+            "description": "User's weight"
+          },
+          "activity": {
+            "type": "number",
+            "description": "User's activity"
+          },
+          "bmr": {
+            "type": "number",
+            "description": "User's bmr"
+          }
+        },
+        "examples": [
+          {
+            "name": "Group03",
+            "gender": "Male",
+            "age": 44,
+            "height": 175,
+            "weight": 70,
+            "activity": 1.9,
+            "bmr": 3071
+          }
+        ]
+      },
+      "forgotpasswordRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        }
+      },
+      "forgotpasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Response message"
+          }
+        },
+        "examples": [
+          {
+            "message": "New password sent to your email"
+          }
+        ]
+      },
+      "GoalRequest": {
+        "type": "object",
+        "required": ["goal"],
+        "properties": {
+          "goal": {
+            "type": "string",
+            "description": "User's goal"
+          }
+        }
+      },
+      "GoalResponse": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string",
+            "description": "User's goal"
+          },
+          "fat": {
+            "type": "number",
+            "description": "Amount of fat"
+          },
+          "protein": {
+            "type": "number",
+            "description": "Protein"
+          },
+          "carbohydrate": {
+            "type": "number",
+            "description": "Carbohydrate"
+          }
+        },
+        "examples": [
+          {
+            "goal": "maintain",
+            "fat": 85,
+            "protein": 154,
+            "carbohydrate": 422
+          }
+        ]
+      },
+      "WeightRequest": {
+        "type": "object",
+        "required": ["weight"],
+        "properties": {
+          "weight": {
+            "type": "number",
+            "description": "User's weight"
+          }
+        }
+      },
+      "WeightResponse": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "number",
+            "description": "The date of creation of the weight"
+          },
+          "weight": {
+            "type": "number",
+            "description": "User's weight"
+          },
+          "bmr": {
+            "type": "number",
+            "description": "bmr"
+          }
+        },
+        "examples": [
+          {
+            "createdAt": "2023-09-25T06:30:52.839Z",
+            "weight": 70,
+            "bmr": 3071
+          }
+        ]
+      },
+      "AddFoodRequest": {
+        "type": "object",
+        "required": [
+          "mealType",
+          "mealName",
+          "carbohydrate",
+          "protein",
+          "fat",
+          "calories",
+          "owner"
+        ],
+        "properties": {
+          "mealType": {
+            "type": "string",
+            "description": "Meal type",
+            "example": "Lunch"
+          },
+          "mealName": {
+            "type": "string",
+            "description": "Meal name",
+            "example": "Pizza"
+          },
+          "carbohydrate": {
+            "type": "number",
+            "description": "Number of carbohydrate",
+            "example": 42
+          },
+          "protein": {
+            "type": "number",
+            "description": "Number of protein",
+            "example": 12
+          },
+          "fat": {
+            "type": "number",
+            "description": "Number of fat",
+            "example": 56
+          },
+          "calories": {
+            "type": "number",
+            "description": "Number of calories",
+            "example": 278
+          },
+          "owner": {
+            "type": "string",
+            "description": "User ID",
+            "example": "userID12345"
+          }
+        }
+      },
+      "FoodResponse": {
+        "type": "object",
+        "properties": {
+          "mealType": {
+            "type": "string",
+            "description": "Meal type",
+            "example": "Lunch"
+          },
+          "mealName": {
+            "type": "string",
+            "description": "Meal name",
+            "example": "Pizza"
+          },
+          "carbohydrate": {
+            "type": "number",
+            "description": "Number of carbohydrate",
+            "example": 42
+          },
+          "protein": {
+            "type": "number",
+            "description": "Number of protein",
+            "example": 12
+          },
+          "fat": {
+            "type": "number",
+            "description": "Number of fat",
+            "example": 56
+          },
+          "calories": {
+            "type": "number",
+            "description": "Number of calories",
+            "example": 278
+          },
+          "owner": {
+            "type": "string",
+            "description": "User ID",
+            "example": "userID12345"
+          }
+        }
+      },
+      "AddWaterResponse": {
+        "type": "object",
+        "required": ["water", "owner"],
+        "properties": {
+          "water": {
+            "type": "number",
+            "description": "Number of water",
+            "example": 500
+          },
+          "owner": {
+            "type": "string",
+            "description": "User ID",
+            "example": "userID12345"
+          }
+        }
+      },
+      "AddWaterRequest": {
+        "type": "object",
+        "required": ["water", "owner"],
+        "properties": {
+          "water": {
+            "type": "number",
+            "description": "Number of water",
+            "example": 500
+          },
+          "owner": {
+            "type": "string",
+            "description": "User ID",
+            "example": "userID12345"
+          }
+        }
+      },
+      "RecomendedFood": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the recommended food item.",
+            "example": "Apples"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount of the recommended food item.",
+            "example": "100 g"
+          },
+          "img": {
+            "type": "string",
+            "description": "Image URL of the recommended food item.",
+            "example": "https://res.cloudinary.com/dec1shvoo/image/upload/v1692479041/Your%20health/pngfind.com-apple-png-1037796_udjai9.png"
+          },
+          "calories": {
+            "type": "number",
+            "description": "Calories of the recommended food item.",
+            "example": 52
+          },
+          "nutrition": {
+            "type": "object",
+            "description": "Nutritional information of the recommended food item.",
+            "properties": {
+              "carbohydrates": {
+                "type": "number",
+                "description": "Carbohydrates content.",
+                "example": 14
+              },
+              "protein": {
+                "type": "number",
+                "description": "Protein content.",
+                "example": 0.3
+              },
+              "fat": {
+                "type": "number",
+                "description": "Fat content.",
+                "example": 0.2
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
