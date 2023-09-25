@@ -6,6 +6,7 @@ const addFood = async (req, res, next) => {
   const newFood = await Food.create({ ...req.body, owner });
 
   res.status(201).json({
+    _id: newFood._id,
     createdAt: newFood.createdAt,
     mealType: newFood.mealType,
     mealName: newFood.mealName,

@@ -13,6 +13,7 @@ const updateFood = async (req, res, next) => {
   }
 
   return res.json({
+    _id: updatedFood._id,
     createdAt: updatedFood.createdAt,
     mealType: updatedFood.mealType,
     mealName: updatedFood.mealName,

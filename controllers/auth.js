@@ -192,7 +192,7 @@ const updateGoal = async (req, res) => {
 
   const user = await User.findByIdAndUpdate(owner, { goal }, { new: true }).exec();
 
-    if (!user) {
+  if (!user) {
     throw HttpError(404, "Not found");
   }
 

@@ -12,7 +12,7 @@ const addWeight = async (req, res, next) => {
   beginDate.setHours(0, 0, 0, 0);
   endDate.setHours(23, 59, 59, 999);
 
-  const existWeight = await Weight.findOne({ owner, createdAt: { $gte: beginDate, $lte: endDate } });
+  const existWeight = await Weight.findOne({ owner, createdAt: { $gte: beginDate, $lte: endDate } }).exec();
 
   if (existWeight) {
     throw HttpError(409, "Weight exists for today");
