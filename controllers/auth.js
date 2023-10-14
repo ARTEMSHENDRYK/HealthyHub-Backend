@@ -105,6 +105,9 @@ const login = async (req, res) => {
       activity: user.activity,
       bmr: user.bmr,
       avatarURL: user.avatarURL,
+      fat: user.fat,
+      protein: user.protein,
+      carbohydrate: user.carbohydrate,
     },
   });
 };
