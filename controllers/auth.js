@@ -113,16 +113,28 @@ const login = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { name, gender, age, height, weight, activity, avatarURL } = req.user;
+  const { name, goal, gender, age, height, weight, activity, bmr, avatarURL, fat, protein, carbohydrate } = req.user;
 
   res.json({
-    name: name,
-    gender: gender,
-    age: age,
-    height: height,
-    weight: weight,
-    activity: activity,
-    avatarURL: avatarURL,
+      name: name,
+      goal: goal,
+      gender: gender,
+      age: age,
+      height: height,
+      weight: weight,
+      activity: activity,
+      bmr: bmr,
+      avatarURL: avatarURL,
+      fat: fat,
+      protein: protein,
+      carbohydrate: carbohydrate,
+    // name: name,
+    // gender: gender,
+    // age: age,
+    // height: height,
+    // weight: weight,
+    // activity: activity,
+    // avatarURL: avatarURL,
   });
 };
 
