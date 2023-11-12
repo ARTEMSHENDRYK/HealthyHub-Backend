@@ -170,6 +170,7 @@ const updateAvatar = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { _id: owner } = req.user;
+  const { goal } = req.body;
 
   const user = await User.findByIdAndUpdate(owner, req.body, { new: true }).exec();
 
@@ -177,7 +178,7 @@ const updateUser = async (req, res) => {
     throw HttpError(404, "Not found");
   }
 
-  const { gender, weight, height, age, activity } = user;
+  const { name, gender, weight, height, age, activity } = user;
 
   const bmr =
     gender === "Male"
@@ -188,16 +189,49 @@ const updateUser = async (req, res) => {
         (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) * activity
       );
   
-  await User.findByIdAndUpdate(owner, { bmr }, { new: true }).exec();
+  // await User.findByIdAndUpdate(owner, { bmr }, { new: true }).exec();
+
+
+  let proteinPercentage, fatPercentage;
+
+  switch (goal) {
+    case "Lose fat":
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+      break;
+    case "Gain muscle":
+      proteinPercentage = 0.30;
+      fatPercentage = 0.20;
+      break;
+    case "Maintain":
+      proteinPercentage = 0.20;
+      fatPercentage = 0.25;
+      break;
+    default:
+      proteinPercentage = 0.25;
+      fatPercentage = 0.20;
+  }
+
+  const carbohydratePercentage = 1 - (proteinPercentage + fatPercentage);
+
+  const protein = Math.round((proteinPercentage * bmr) / 4);
+  const fat = Math.round((fatPercentage * bmr) / 9);
+  const carbohydrate = Math.round((carbohydratePercentage * bmr) / 4);
+
+  await User.findByIdAndUpdate(owner, { bmr, fat, protein, carbohydrate }, { new: true }).exec();
 
   res.status(200).json({
-    name: user.name,
-    gender: user.gender,
-    age: user.age,
-    height: user.height,
-    weight: user.weight,
-    activity: user.activity,
+    name: name,
+    gender: gender,
+    age: age,
+    height: height,
+    weight: weight,
+    activity: activity,
     bmr: bmr,
+    goal: goal,
+    fat: fat,
+    protein: protein,
+    carbohydrate: carbohydrate,    
   });
 };
 
